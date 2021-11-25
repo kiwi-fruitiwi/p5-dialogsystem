@@ -24,20 +24,17 @@ what am I aiming for?
 
 let font
 let cam // easycam!
-let SPHERE_DETAIL = 24 // number of segments per θ and φ
-let SPHERE_RADIUS = 100
 
 // define the hue and saturation for all 3 axes
 const X_HUE = 0, X_SAT = 80, Y_HUE = 90, Y_SAT = 80, Z_HUE = 210, Z_SAT = 80
 const DIM = 40 // brightness value for the dimmer negative axis
 const BRIGHT = 75 // brightness value for the brighter positive axis
 
-let globe // an n by n 2D array of points on a sphere in (r, θ, φ) triples
-let angle = 0 // we use this as a phase variable to vary our sine waves
-
 // read the amplitude of our voice from the mic
 let voice
 let p5amp
+
+let passage
 
 // prevent the context menu from showing up :3 nya~
 document.oncontextmenu = function() {
@@ -69,35 +66,52 @@ function touchStarted() {
 
 
 function setup() {
-    createCanvas(640, 360, WEBGL)
+    createCanvas(640, 360)
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 16)
 
     cam = new Dw.EasyCam(this._renderer, {distance:240});
-    cam.rotateX(-PI/2)
 
-    p5amp = new p5.Amplitude()
-    voice.play()
+    /*
+        cam.rotateX(-PI/2)
+        p5amp = new p5.Amplitude()
+        voice.play()
+     */
+
+    passage = new Passage("So you've accessed a network station! ")
 }
 
 
 function draw() {
-    // background(234, 34, 24)
-    background(223, 29, 35)
-    ambientLight(250);
-    directionalLight(0, 0, 10, .5, 1, 0); // z axis seems inverted
+    background(234, 34, 24)
+    // background(223, 29, 35)
+    // ambientLight(250);
+    // directionalLight(0, 0, 10, .5, 1, 0); // z axis seems inverted
 
-    drawBlenderAxes()
-    displayHUD()
+    // drawBlenderAxes()
+    // displayHUD()
+    displayPassage()
+
+    /*  to get around the unconnected beginShape problem in WEBGL, maybe we can
+        use a p5Image and output the result of the 2D image as an overlay in
+        3D? let's focus on drawing the 2D image first.
+
+     */
 }
 
-
+function displayPassage() {
+    // cam.beginHUD(this._renderer, width, height)
+    passage.render()
+    // cam.endHUD()
+}
 
 
 function displayHUD() {
     cam.beginHUD(this._renderer, width, height)
     const PADDING = 10
     const LETTER_HEIGHT = textAscent()
+
+    textFont(font, 10)
 
     // display the colors of the axes
     fill(X_HUE, X_SAT, BRIGHT)
