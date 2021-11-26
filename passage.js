@@ -146,7 +146,7 @@ class Passage {
         const BRC = new p5.Vector(x+this.boxWidth, y+this.HEIGHT) // bottom r.
         // corner
         const BLC = new p5.Vector(x, y+this.HEIGHT)
-
+        const lineWeight = 2
 
         fill(210, 62, 12, 75)
         noStroke()
@@ -166,29 +166,70 @@ class Passage {
         // the cyan outline
         const cyan = color(188, 20, 94)
         stroke(cyan)
-        strokeWeight(2)
+        strokeWeight(lineWeight)
 
         noFill()
-        beginShape()
 
         // top border including corner guards
+        beginShape()
+        // vertical line extending below TL corner guard
         vertex(TLC.x, TLC.y+s*r)
+
+        // TL corner bottom left point
         vertex(TLC.x, TLC.y+r)
+
+        // TL corner top right point
         vertex(TLC.x+r, TLC.y)
         vertex(TRC.x-r, TRC.y)
         vertex(TRC.x, TRC.y+r)
         vertex(TRC.x, TRC.y+s*r)
         endShape()
 
-        beginShape()
         // bottom border including corner guards
+        strokeWeight(lineWeight)
+        beginShape()
         vertex(BRC.x, BRC.y-s*r)
         vertex(BRC.x, BRC.y-r)
         vertex(BRC.x-r, BRC.y)
         vertex(BLC.x+r, BLC.y)
         vertex(BLC.x, BLC.y-r)
         vertex(BLC.x, BLC.y-s*r)
+        endShape()
 
+        const cornerGuardHorizontalScale = 0.108
+
+        /** Corner guards! */
+        // extra thick corner guard, top left
+        strokeWeight(lineWeight+1)
+        beginShape()
+        vertex(TLC.x+1, TLC.y+r+1) // BL corner
+        vertex(TLC.x+1+r, TLC.y+1) // TR corner
+        vertex(TLC.x+this.boxWidth*cornerGuardHorizontalScale, TLC.y+1)
+        // ⅛ of boxWidth bold line
+        endShape()
+
+        // extra thick corner guard, top right
+        strokeWeight(lineWeight+1)
+        beginShape()
+        vertex(TRC.x-this.boxWidth*cornerGuardHorizontalScale, TLC.y+1)
+        vertex(TRC.x-r-1, TRC.y+1)
+        vertex(TRC.x-1, TRC.y+r+1)
+        endShape()
+
+        // extra thick corner guard, bottom right
+        strokeWeight(lineWeight+1)
+        beginShape()
+        vertex(BRC.x-1, BRC.y-1-r)
+        vertex(BRC.x-1-r, BRC.y-1)
+        vertex(BRC.x-this.boxWidth*cornerGuardHorizontalScale, BRC.y-1)
+        endShape()
+
+        // extra thick corner guard, bottom right
+        strokeWeight(lineWeight+1)
+        beginShape()
+        vertex(BLC.x+this.boxWidth*cornerGuardHorizontalScale, BLC.y-1)
+        vertex(BLC.x+1+r, BLC.y-1)
+        vertex(BLC.x+1, BLC.y-1-r)
         endShape()
     }
 }
