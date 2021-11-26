@@ -32,6 +32,7 @@ let voice
 let p5amp
 
 let passage
+let mode_2D = true
 
 // prevent the context menu from showing up :3 nya~
 document.oncontextmenu = function() {
@@ -45,26 +46,6 @@ function preload() {
 }
 
 
-/* Fixes: sound being blocked https://talonendm.github.io/2020-11-16-JStips/
-   Errors messages (CTRL SHIFT i) Chrome Developer Tools:
-   The AudioContext was not allowed to start. It must be resumed (or
-   created)  after a user gesture on the page. https://goo.gl/7K7WLu
-
-   Possibly unrelated: maybe we need to add sound.js.map too.
-   DevTools failed to load SourceMap: Could not load content for
-   https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js.map
-   : HTTP error: status code 404, net::ERR_HTTP_RESPONSE_CODE_FAILURE
- */
-function touchStarted() {
-    if (getAudioContext().state !== 'running') {
-        getAudioContext().resume().then(r => {});
-    }
-}
-
-
-let img
-let mode_2D = true
-
 function setup() {
     if (mode_2D) {
         createCanvas(640, 360)
@@ -76,7 +57,6 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 16)
 
-    img = loadImage('data/untitled.png')
 
     /*
         cam.rotateX(-PI/2)
@@ -85,22 +65,23 @@ function setup() {
      */
 
     passage = new Passage("So you've accessed a network station! ")
-    // passage.saveRenderImg()
+    passage.saveRenderedTextBoxImg()
 }
 
 
 function draw() {
     background(234, 34, 24)
     // background(223, 29, 35)
-    // ambientLight(250);
-    // directionalLight(0, 0, 10, .5, 1, 0); // z axis seems inverted
 
-    if (!mode_2D) {
+    if (mode_2D) {
+        passage.render2DTextBox(this)
+    } else {
+        ambientLight(250);
+        directionalLight(0, 0, 10, .5, 1, 0); // z axis seems inverted
         drawBlenderAxes()
         displayHUD()
-        displayPassage()
-    } else {
-        passage.renderBox()
+
+        passage.renderTextFrame(cam, this)
     }
 
 
@@ -111,16 +92,6 @@ function draw() {
 
      */
 }
-
-function displayPassage() {
-    cam.beginHUD(this._renderer, width, height)
-    passage.render()
-
-    // image(img, 0, 0, width, height)
-
-    cam.endHUD()
-}
-
 
 function displayHUD() {
     cam.beginHUD(this._renderer, width, height)
@@ -171,4 +142,21 @@ function drawBlenderAxes() {
 
 function keyPressed() {
 
+}
+
+
+/* Fixes: sound being blocked https://talonendm.github.io/2020-11-16-JStips/
+   Errors messages (CTRL SHIFT i) Chrome Developer Tools:
+   The AudioContext was not allowed to start. It must be resumed (or
+   created)  after a user gesture on the page. https://goo.gl/7K7WLu
+
+   Possibly unrelated: maybe we need to add sound.js.map too.
+   DevTools failed to load SourceMap: Could not load content for
+   https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js.map
+   : HTTP error: status code 404, net::ERR_HTTP_RESPONSE_CODE_FAILURE
+ */
+function touchStarted() {
+    if (getAudioContext().state !== 'running') {
+        getAudioContext().resume().then(r => {});
+    }
 }
