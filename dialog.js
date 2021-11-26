@@ -65,12 +65,21 @@ function touchStarted() {
 }
 
 
+let img
+let mode_2D = true
+
 function setup() {
-    createCanvas(640, 360)
+    if (mode_2D) {
+        createCanvas(640, 360)
+    } else {
+        createCanvas(640, 360, WEBGL)
+        cam = new Dw.EasyCam(this._renderer, {distance: 240});
+    }
+
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 16)
 
-    cam = new Dw.EasyCam(this._renderer, {distance:240});
+    img = loadImage('data/untitled.png')
 
     /*
         cam.rotateX(-PI/2)
@@ -79,6 +88,7 @@ function setup() {
      */
 
     passage = new Passage("So you've accessed a network station! ")
+    // passage.saveRenderImg()
 }
 
 
@@ -88,9 +98,15 @@ function draw() {
     // ambientLight(250);
     // directionalLight(0, 0, 10, .5, 1, 0); // z axis seems inverted
 
-    // drawBlenderAxes()
-    // displayHUD()
-    displayPassage()
+    if (!mode_2D) {
+        drawBlenderAxes()
+        displayHUD()
+        displayPassage()
+    } else {
+        passage.renderBox()
+    }
+
+
 
     /*  to get around the unconnected beginShape problem in WEBGL, maybe we can
         use a p5Image and output the result of the 2D image as an overlay in
@@ -100,9 +116,12 @@ function draw() {
 }
 
 function displayPassage() {
-    // cam.beginHUD(this._renderer, width, height)
+    cam.beginHUD(this._renderer, width, height)
     passage.render()
-    // cam.endHUD()
+
+    // image(img, 0, 0, width, height)
+
+    cam.endHUD()
 }
 
 
