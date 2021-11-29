@@ -14,10 +14,8 @@ class Passage {
         this.HEIGHT = 120
 
         this.boxWidth = width - this.LEFT_MARGIN - this.RIGHT_MARGIN
-
-
-
         this.textFrame = loadImage('data/textFrame.png')
+        this.text = this.passageList[0]
     }
 
     // advance to the next section
@@ -31,12 +29,83 @@ class Passage {
     }
 
     // display the current passage up to the current index
-    renderText() {
+    renderText(cam) {
+        if (frameCount % 2 === 0) {
+            if (this.index < this.text.length-1) {
+                this.index += 1
+            }
+        }
+
+        if (cam) cam.beginHUD(p5._renderer, width, height)
         /*  use text() to display characters with character wrap
             color(204, 4, 80) is the correct white text color
          */
 
+        noStroke()
+        let CHAR_POS = []
 
+        const TEXT_TOP_MARGIN = 290
+        const TEXT_LEFT_MARGIN = 75
+        const TEXT_RIGHT_MARGIN = TEXT_LEFT_MARGIN
+        const HIGHLIGHT_PADDING = 0
+
+        // the bottom left corner of the current letter we are typing = cursor
+        let cursor = new p5.Vector(TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN)
+        const HIGHLIGHT_BOX_HEIGHT = textAscent() + textDescent()
+
+        /*  display the entire passage without text wrap
+         */
+        for (let i=0; i<this.index; i++) {
+            // save the position of the ith character. we'll need this later
+            CHAR_POS.push(cursor.copy())
+
+
+
+
+            /*  draw current letter above (z-index) the highlight box
+                color emphasized words yellow
+             */
+            if (i > 77 && i < 103) {
+                fill(63, 60, 75)
+            } else {
+                fill(204, 4, 80)
+            }
+
+            text(this.text[i], cursor.x, cursor.y)
+
+            /*  modify cursor position to where the next letter should be.
+             */
+            cursor.x += textWidth(this.text[i])
+            // cursor.x += 10
+
+            // console.log(textWidth(this.text[i]))
+
+            // this is the horizontal coordinate where we must text wrap
+            const LINE_WRAP_X_POS = width - TEXT_RIGHT_MARGIN
+
+            /*  if we're at a whitespace, determine if we need a new line:
+                    find the next whitespace
+                    the word between us and that whitespace is the next word
+                    if the width of that word + our cursor + current space >
+                     limit, then newline
+             */
+            if (this.text[i] === ' ') {
+                let ndi = this.text.indexOf(" ", i+1) // next delimiter index
+                let nextWord = this.text.substring(i+1, ndi)
+
+
+                if (textWidth(nextWord) +
+                    textWidth(this.text[i]) +
+                    cursor.x > LINE_WRAP_X_POS) {
+                        cursor.y += HIGHLIGHT_BOX_HEIGHT
+
+                        // don't forget to wrap the x coordinates! ᴖᴥᴖ
+                        cursor.x = TEXT_LEFT_MARGIN
+                }
+            }
+        }
+
+        if (cam) cam.endHUD()
     }
 
     // loads the saved box texture with transparency

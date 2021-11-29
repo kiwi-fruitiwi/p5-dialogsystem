@@ -10,7 +10,7 @@ what am I aiming for?
     ☒ WEBGL with something 3D in the background
     ☒ beginHUD, endHUD: semi-transparent box design.
     ☒ generate image for box because of WEBGL errors
-    ☐ use math on corners
+    ☒ use math to generate "corner guards"
     text from a passage using elements from p5-typerc including:
         text cursor
         word wrapping
@@ -32,17 +32,15 @@ let voice
 let p5amp
 
 let passage
-let mode_2D = true
-
-// prevent the context menu from showing up :3 nya~
-document.oncontextmenu = function() {
-    return false;
-}
+let mode_2D = false
 
 
 function preload() {
-    font = loadFont('data/Meiryo-01.ttf')
-    voice = loadSound('data/adam.mp3')
+    // font = loadFont('data/giga.ttf')
+    // font = loadFont('data/VDL-GigaMaru M.ttf')
+    // font = loadFont('data/lucida-console.ttf')
+    font = loadFont('data/meiryo.ttf')
+    // voice = loadSound('data/adam.mp3')
 }
 
 
@@ -55,17 +53,20 @@ function setup() {
     }
 
     colorMode(HSB, 360, 100, 100, 100)
-    textFont(font, 16)
+    textFont(font, 14)
 
-
-    /*
-        cam.rotateX(-PI/2)
-        p5amp = new p5.Amplitude()
-        voice.play()
+    /*  old code from p5.sphericalgeometry
+            cam.rotateX(-PI/2)
+            p5amp = new p5.Amplitude()
+            voice.play()
      */
 
-    passage = new Passage("So you've accessed a network station! ")
-    passage.saveRenderedTextBoxImg()
+    passage = new Passage(["So, you've accessed a network station. Well" +
+    " done, Samus. I have reviewed your vital signs and video log from the" +
+    " data you uploaded. ", "I've run a full analysis. But I cannot account" +
+    " for why you lost consciousness. My reading indicate dramatic physical" +
+    " changes in you. "])
+    // passage.saveRenderedTextBoxImg()
 }
 
 
@@ -73,23 +74,33 @@ function draw() {
     background(234, 34, 24)
     // background(223, 29, 35)
 
+    // 2D mode is for testing our dialog box!
     if (mode_2D) {
         passage.render2DTextBox(this)
+
+        noStroke()
+        fill(0, 0, 100)
+        // text(" ", 190, 200)
+        // text("A", 200, 200)
+        // text("D", 210, 200)
+        // text("A", 220, 200)
+        // text("M", 230, 200)
+        passage.renderText()
     } else {
+        // otherwise we go into 3D and load our transparent, generated dialog
+        // box img on top of a simple 3D scene.
         ambientLight(250);
         directionalLight(0, 0, 10, .5, 1, 0); // z axis seems inverted
         drawBlenderAxes()
         displayHUD()
 
-        passage.renderTextFrame(cam, this)
+        passage.renderTextFrame(cam)
+        passage.renderText(cam)
     }
-
-
 
     /*  to get around the unconnected beginShape problem in WEBGL, maybe we can
         use a p5Image and output the result of the 2D image as an overlay in
         3D? let's focus on drawing the 2D image first.
-
      */
 }
 
@@ -102,15 +113,15 @@ function displayHUD() {
 
     // display the colors of the axes
     fill(X_HUE, X_SAT, BRIGHT)
-    text("x axis", PADDING, height-LETTER_HEIGHT*3)
+    text("x axis", PADDING, height - LETTER_HEIGHT * 3)
 
     // green y axis
     fill(Y_HUE, Y_SAT, BRIGHT)
-    text("y axis", PADDING, height-LETTER_HEIGHT*2)
+    text("y axis", PADDING, height - LETTER_HEIGHT * 2)
 
     // blue z axis
     fill(Z_HUE, Z_SAT, BRIGHT)
-    text("z axis", PADDING, height-LETTER_HEIGHT)
+    text("z axis", PADDING, height - LETTER_HEIGHT)
     cam.endHUD()
 }
 
@@ -140,11 +151,6 @@ function drawBlenderAxes() {
 }
 
 
-function keyPressed() {
-
-}
-
-
 /* Fixes: sound being blocked https://talonendm.github.io/2020-11-16-JStips/
    Errors messages (CTRL SHIFT i) Chrome Developer Tools:
    The AudioContext was not allowed to start. It must be resumed (or
@@ -157,6 +163,13 @@ function keyPressed() {
  */
 function touchStarted() {
     if (getAudioContext().state !== 'running') {
-        getAudioContext().resume().then(r => {});
+        getAudioContext().resume().then(r => {
+        });
     }
+}
+
+
+// prevent the context menu from showing up :3 nya~
+document.oncontextmenu = function () {
+    return false;
 }
