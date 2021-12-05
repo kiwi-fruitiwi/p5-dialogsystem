@@ -18,7 +18,23 @@ class Passage {
         this.text = this.passageList[0]
 
         // list of hardcoded (start, end) specifying which words to highlight
-        this.highlightIndices = [[78, 102], [], []]
+        this.highlightIndices = [[78, 102], [], [], [], [], []]
+
+        /*  TODO
+                hardcode highlightIndices
+                triangle
+                time characters per section in Dread for advanceChar
+                better times: synchronize with video
+                JSON input for passages and indices
+                    https://p5js.org/reference/#/p5/loadJSON
+
+                ...
+                make adam show up
+                port to java
+                polish lengths for text box frame to make sure they are accurate
+         */
+
+        console.log(this.passageList.length)
     }
 
 
@@ -27,11 +43,15 @@ class Passage {
 
      */
     nextPassage() {
-        this.passageIndex += 1
-        this.text = this.passageList[this.passageIndex]
+        if (this.passageIndex === this.passageList.length - 1) {
+            console.log("we're done! :Sal's voice:")
+        } else {
+            this.passageIndex += 1
+            this.text = this.passageList[this.passageIndex]
 
-        // reset the current passage index so we restart at beginning
-        this.index = 0
+            // reset the current passage index so we restart at beginning
+            this.index = 0
+        }
     }
 
     // advances the current char in the current passage, but does nothing if

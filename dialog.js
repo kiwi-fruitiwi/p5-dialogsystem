@@ -65,11 +65,27 @@ function setup() {
     passage = new Passage(["So, you've accessed a network station. Well" +
     " done, Samus. I have reviewed your vital signs and video log from the" +
     " data you uploaded. ", "I've run a full analysis. But I cannot account" +
-    " for why you lost consciousness. My reading indicate dramatic physical" +
-    " changes in you. "])
+    " for why you lost consciousness. My readings indicate dramatic physical" +
+    " changes in you. ", "Whatever caused these changes seems to have" +
+    " stripped you of most abilities. You might call it physical amnesia. ",
+    "That brings me to your assailant. I am checking the Federation database" +
+    " against your video log. It appears to be been a Chozo. The attacker's" +
+    " identity is not yet clear. ", "I have determined that you are somewhere" +
+    " within the depths of ZDR. Your top priority should be to return to" +
+    " your ship on the surface. This situation is... precarious. Trust your" +
+    " instincts as you navigate upward. ", "This planet appears to consist of" +
+    " multiple areas. Shuttles, elevators, and other modes of transport" +
+    " connect them. Keep an eye out for ways to reach the surface. "])
+
+
+    /*  Chozo,
+        the depths of ZDR, nagivate upward.
+        ways to reach the surface.
+    * */
     // passage.saveRenderedTextBoxImg()
 }
 
+let lastPassageAdvanceTime = 0
 
 function draw() {
     background(234, 34, 24)
@@ -102,8 +118,9 @@ function draw() {
             passage.advanceChar()
         }
 
-        if (millis() > 4000 && passage.passageIndex === 0) {
+        if (millis() - lastPassageAdvanceTime > 4000) {
             passage.nextPassage()
+            lastPassageAdvanceTime = millis()
         }
     }
 
