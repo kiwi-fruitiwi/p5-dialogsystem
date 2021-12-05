@@ -16,6 +16,9 @@ class Passage {
         this.boxWidth = width - this.LEFT_MARGIN - this.RIGHT_MARGIN
         this.textFrame = loadImage('data/textFrame.png')
         this.text = this.passageList[0]
+
+        // list of hardcoded (start, end) specifying which words to highlight
+        this.highlightIndices = [[78, 102], [], []]
     }
 
 
@@ -25,12 +28,16 @@ class Passage {
      */
     nextPassage() {
         this.passageIndex += 1
+        this.text = this.passageList[this.passageIndex]
+
+        // reset the current passage index so we restart at beginning
+        this.index = 0
     }
 
     // advances the current char in the current passage, but does nothing if
     // we are at the end
     advanceChar() {
-        if (this.index < this.text.length-1) {
+        if (this.index < this.text.length - 1) {
             this.index += 1
         }
     }
@@ -63,7 +70,8 @@ class Passage {
             /*  draw current letter above (z-index) the highlight box
                 color emphasized words yellow
              */
-            if (i > 77 && i < 103) {
+            if (i >= this.highlightIndices[this.passageIndex][0] &&
+                i <= this.highlightIndices[this.passageIndex][1]) {
                 fill(63, 60, 75)
             } else {
                 fill(204, 4, 80)

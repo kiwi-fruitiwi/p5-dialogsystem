@@ -102,8 +102,8 @@ function draw() {
             passage.advanceChar()
         }
 
-        if (millis() > 5000) {
-            console.log("5 seconds have passed!")
+        if (millis() > 4000 && passage.passageIndex === 0) {
+            passage.nextPassage()
         }
     }
 
