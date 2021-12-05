@@ -18,24 +18,25 @@ class Passage {
         this.text = this.passageList[0]
     }
 
-    // advance to the next section
+
+    /*  advance to the next passage
+        how will this be called?
+
+     */
     nextPassage() {
         this.passageIndex += 1
     }
 
-    // advances the current char in the current passage
+    // advances the current char in the current passage, but does nothing if
+    // we are at the end
     advanceChar() {
-
+        if (this.index < this.text.length-1) {
+            this.index += 1
+        }
     }
 
     // display the current passage up to the current index
     renderText(cam) {
-        if (frameCount % 2 === 0) {
-            if (this.index < this.text.length-1) {
-                this.index += 1
-            }
-        }
-
         if (cam) cam.beginHUD(p5._renderer, width, height)
         /*  use text() to display characters with character wrap
             color(204, 4, 80) is the correct white text color
@@ -58,9 +59,6 @@ class Passage {
         for (let i=0; i<this.index; i++) {
             // save the position of the ith character. we'll need this later
             CHAR_POS.push(cursor.copy())
-
-
-
 
             /*  draw current letter above (z-index) the highlight box
                 color emphasized words yellow

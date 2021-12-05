@@ -35,6 +35,7 @@ let passage
 let mode_2D = false
 
 
+
 function preload() {
     // font = loadFont('data/giga.ttf')
     // font = loadFont('data/VDL-GigaMaru M.ttf')
@@ -87,7 +88,7 @@ function draw() {
         // text("M", 230, 200)
         passage.renderText()
     } else {
-        // otherwise we go into 3D and load our transparent, generated dialog
+        // otherwise, we go into 3D and load our transparent, generated dialog
         // box img on top of a simple 3D scene.
         ambientLight(250);
         directionalLight(0, 0, 10, .5, 1, 0); // z axis seems inverted
@@ -96,6 +97,14 @@ function draw() {
 
         passage.renderTextFrame(cam)
         passage.renderText(cam)
+
+        if (frameCount % 2 === 0) {
+            passage.advanceChar()
+        }
+
+        if (millis() > 5000) {
+            console.log("5 seconds have passed!")
+        }
     }
 
     /*  to get around the unconnected beginShape problem in WEBGL, maybe we can
