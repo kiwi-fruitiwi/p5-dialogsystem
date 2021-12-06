@@ -31,19 +31,28 @@ const BRIGHT = 75 // brightness value for the brighter positive axis
 let voice
 let p5amp
 
-let passage
+let sketch
 let mode_2D = false
 
-
+let passages // our json file input
+let lastPassageAdvanceTime = 0 // when was the last passage advance?
 
 function preload() {
     // font = loadFont('data/giga.ttf')
     // font = loadFont('data/VDL-GigaMaru M.ttf')
     // font = loadFont('data/lucida-console.ttf')
-    font = loadFont('data/meiryo.ttf')
-    // voice = loadSound('data/adam.mp3')
+    font = loadFont('data/notjustgroovy.ttf')
+    voice = loadSound('data/adam.mp3')
+
+    passages = loadJSON("passages.json")
+
 }
 
+/* populate an array of passage text */
+let textList = []
+/* grab other information: ms spent on each passage, highlights */
+let highlightList = [] // a list of tuples specifying highlights and indexes
+let msPerPassage = 0 // how long to wait before advancing a passage
 
 function setup() {
     if (mode_2D) {
@@ -56,36 +65,21 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 14)
 
-    /*  old code from p5.sphericalgeometry
-            cam.rotateX(-PI/2)
-            p5amp = new p5.Amplitude()
-            voice.play()
-     */
 
-    passage = new Passage(["So, you've accessed a network station. Well" +
-    " done, Samus. I have reviewed your vital signs and video log from the" +
-    " data you uploaded. ", "I've run a full analysis. But I cannot account" +
-    " for why you lost consciousness. My readings indicate dramatic physical" +
-    " changes in you. ", "Whatever caused these changes seems to have" +
-    " stripped you of most abilities. You might call it physical amnesia. ",
-    "That brings me to your assailant. I am checking the Federation database" +
-    " against your video log. It appears to be been a Chozo. The attacker's" +
-    " identity is not yet clear. ", "I have determined that you are somewhere" +
-    " within the depths of ZDR. Your top priority should be to return to" +
-    " your ship on the surface. This situation is... precarious. Trust your" +
-    " instincts as you navigate upward. ", "This planet appears to consist of" +
-    " multiple areas. Shuttles, elevators, and other modes of transport" +
-    " connect them. Keep an eye out for ways to reach the surface. "])
+    for (let key in passages) {
+        textList.push(passages[key]['text'])
 
+        // for (let highlightKey in passages[key]['highlightIndices'])
+        //     highlightList.push(passages[key]['highlightIndices'])
+        highlightList.push(passages[key]['highlightIndices'])
+        msPerPassage = passages[key]['ms']
+    }
 
-    /*  Chozo,
-        the depths of ZDR, nagivate upward.
-        ways to reach the surface.
-    * */
+    // TODO add arguments to DialogBox: tpp, hll
+    sketch = new DialogBox(textList, highlightList, msPerPassage)
+
     // passage.saveRenderedTextBoxImg()
 }
-
-let lastPassageAdvanceTime = 0
 
 function draw() {
     background(234, 34, 24)
@@ -93,7 +87,7 @@ function draw() {
 
     // 2D mode is for testing our dialog box!
     if (mode_2D) {
-        passage.render2DTextBox(this)
+        sketch.render2DTextBox(this)
 
         noStroke()
         fill(0, 0, 100)
@@ -102,7 +96,7 @@ function draw() {
         // text("D", 210, 200)
         // text("A", 220, 200)
         // text("M", 230, 200)
-        passage.renderText()
+        sketch.renderText()
     } else {
         // otherwise, we go into 3D and load our transparent, generated dialog
         // box img on top of a simple 3D scene.
@@ -111,15 +105,15 @@ function draw() {
         drawBlenderAxes()
         displayHUD()
 
-        passage.renderTextFrame(cam)
-        passage.renderText(cam)
+        sketch.renderTextFrame(cam)
+        sketch.renderText(cam)
 
-        if (frameCount % 2 === 0) {
-            passage.advanceChar()
+        if (frameCount % 1 === 0) {
+            sketch.advanceChar()
         }
 
         if (millis() - lastPassageAdvanceTime > 4000) {
-            passage.nextPassage()
+            sketch.nextPassage()
             lastPassageAdvanceTime = millis()
         }
     }

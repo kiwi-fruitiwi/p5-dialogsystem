@@ -1,9 +1,9 @@
-class Passage {
-    constructor(text) {
+class DialogBox {
+    constructor(passages, highlightIndices, msPerPassage) {
         /*  contains an array of passage texts:
                 ["passage 1...", "passage 2...", "passage 3...", etc.]
          */
-        this.passageList = text
+        this.passageList = passages
         this.index = 0 // the char index we are currently displaying
         this.passageIndex = 0 // which passage in our passage array are we on?
         this.passage = this.passageList[this.passageIndex]
@@ -18,7 +18,7 @@ class Passage {
         this.text = this.passageList[0]
 
         // list of hardcoded (start, end) specifying which words to highlight
-        this.highlightIndices = [[78, 102], [], [], [], [], []]
+        this.highlightIndices = highlightIndices
 
         /*  TODO
                 hardcode highlightIndices
@@ -33,8 +33,6 @@ class Passage {
                 port to java
                 polish lengths for text box frame to make sure they are accurate
          */
-
-        console.log(this.passageList.length)
     }
 
 
@@ -90,11 +88,18 @@ class Passage {
             /*  draw current letter above (z-index) the highlight box
                 color emphasized words yellow
              */
-            if (i >= this.highlightIndices[this.passageIndex][0] &&
-                i <= this.highlightIndices[this.passageIndex][1]) {
-                fill(63, 60, 75)
-            } else {
-                fill(204, 4, 80)
+
+            fill(204, 4, 80) // default color
+
+            // check highlightIndices to see if there's something to highlight
+            let hlEntry = this.highlightIndices[this.passageIndex]
+
+            // loop through hlEntry, a list of highlight indices. highlight!
+            for (let e of hlEntry) {
+                if (i >= e.start &&
+                    i <= e.end) {
+                    fill(63, 60, 75)
+                }
             }
 
             text(this.text[i], cursor.x, cursor.y)
