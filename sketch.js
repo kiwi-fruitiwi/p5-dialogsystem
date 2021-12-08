@@ -65,7 +65,7 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 14)
 
-
+    /* 'in' makes our variable the index, while 'of' makes it the value! */
     for (let key in passages) {
         textList.push(passages[key]['text'])
 
@@ -73,6 +73,13 @@ function setup() {
         //     highlightList.push(passages[key]['highlightIndices'])
         highlightList.push(passages[key]['highlightIndices'])
         msPerPassage = passages[key]['ms']
+    }
+
+    /* we can also use the Object.keys method to grab keys from JSON! */
+
+    
+    for (let i = 0; i < Object.keys(passages).length; i++) {
+        console.log(passages[i].highlightIndices)
     }
 
     // TODO add arguments to DialogBox: tpp, hll
