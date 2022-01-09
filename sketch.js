@@ -38,12 +38,11 @@ let passages // our json file input
 let lastPassageAdvanceTime = 0 // when was the last passage advance?
 
 function preload() {
-    // font = loadFont('data/giga.ttf')
+    font = loadFont('data/giga.ttf')
     // font = loadFont('data/VDL-GigaMaru M.ttf')
     // font = loadFont('data/lucida-console.ttf')
-    font = loadFont('data/notjustgroovy.ttf')
+    // font = loadFont('data/notjustgroovy.ttf')
     voice = loadSound('data/adam.mp3')
-
     passages = loadJSON("passages.json")
 
 }
@@ -61,9 +60,9 @@ function setup() {
         createCanvas(640, 360, WEBGL)
         cam = new Dw.EasyCam(this._renderer, {distance: 240});
     }
-
+    
     colorMode(HSB, 360, 100, 100, 100)
-    textFont(font, 14)
+    textFont(font, 12)
 
     /* 'in' makes our variable the index, while 'of' makes it the value! */
     for (let key in passages) {
@@ -76,8 +75,6 @@ function setup() {
     }
 
     /* we can also use the Object.keys method to grab keys from JSON! */
-
-    
     for (let i = 0; i < Object.keys(passages).length; i++) {
         console.log(passages[i].highlightIndices)
     }
