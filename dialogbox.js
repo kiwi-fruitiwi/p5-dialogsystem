@@ -8,10 +8,10 @@ class DialogBox {
         this.passageIndex = 0 // which passage in our passage array are we on?
         this.passage = this.passageList[this.passageIndex]
 
-        this.LEFT_MARGIN = 50
+        this.LEFT_MARGIN = 40
         this.RIGHT_MARGIN = this.LEFT_MARGIN
         this.BOTTOM_MARGIN = 10
-        this.HEIGHT = 120
+        this.HEIGHT = 112
 
         this.boxWidth = width - this.LEFT_MARGIN - this.RIGHT_MARGIN
         this.textFrame = loadImage('data/textFrame.png')
@@ -193,7 +193,7 @@ class DialogBox {
         const BRC = new p5.Vector(x+this.boxWidth, y+this.HEIGHT) // bottom r.
         // corner
         const BLC = new p5.Vector(x, y+this.HEIGHT)
-        const lineWeight = 2
+        const lineWeight = 3
 
         pg.fill(210, 62, 12, 75)
         pg.noStroke()
@@ -219,7 +219,8 @@ class DialogBox {
         // top border including corner guards
         pg.beginShape()
         // vertical line extending below TL corner guard
-        pg.vertex(TLC.x, TLC.y+s*r)
+        // TODO needs more work with extra thick corner guard verticals
+        pg.vertex(TLC.x, TLC.y+s*r /* +3 add here to be more accurate */)
 
         // TL corner bottom left point
         pg.vertex(TLC.x, TLC.y+r)
@@ -246,8 +247,11 @@ class DialogBox {
 
         /** Corner guards! */
         // extra thick corner guard, top left
-        pg.strokeWeight(lineWeight+1)
+        pg.strokeWeight(lineWeight) /* lineWeight used to be 1 less, so we
+         added one here */
         pg.beginShape()
+        /* vertical line from bottom to BL corner; need vertex below */
+        // pg.vertex(TLC.x+1, TLC.y+r+10)
         pg.vertex(TLC.x+1, TLC.y+r+1) // BL corner
         pg.vertex(TLC.x+1+r, TLC.y+1) // TR corner
         pg.vertex(TLC.x+this.boxWidth*cornerGuardHorizontalScale, TLC.y+1)

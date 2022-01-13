@@ -31,17 +31,18 @@ const BRIGHT = 75 // brightness value for the brighter positive axis
 let voice
 let p5amp
 
-let sketch
-let mode_2D = false
+let dialogBox
+let mode_2D = true
 
 let passages // our json file input
 let lastPassageAdvanceTime = 0 // when was the last passage advance?
 
 function preload() {
-    font = loadFont('data/giga.ttf')
+    // font = loadFont('data/giga.ttf') // doesn't work due to textWidth issues
     // font = loadFont('data/VDL-GigaMaru M.ttf')
     // font = loadFont('data/lucida-console.ttf')
     // font = loadFont('data/notjustgroovy.ttf')
+    font = loadFont('data/meiryo.ttf')
     voice = loadSound('data/adam.mp3')
     passages = loadJSON("passages.json")
 
@@ -54,6 +55,8 @@ let highlightList = [] // a list of tuples specifying highlights and indexes
 let msPerPassage = 0 // how long to wait before advancing a passage
 
 function setup() {
+    noSmooth()
+
     if (mode_2D) {
         createCanvas(640, 360)
     } else {
@@ -80,9 +83,9 @@ function setup() {
     }
 
     // TODO add arguments to DialogBox: tpp, hll
-    sketch = new DialogBox(textList, highlightList, msPerPassage)
+    dialogBox = new DialogBox(textList, highlightList, msPerPassage)
 
-    // passage.saveRenderedTextBoxImg()
+    dialogBox.saveRenderedTextBoxImg()
 }
 
 function draw() {
@@ -91,7 +94,7 @@ function draw() {
 
     // 2D mode is for testing our dialog box!
     if (mode_2D) {
-        sketch.render2DTextBox(this)
+        dialogBox.render2DTextBox(this)
 
         noStroke()
         fill(0, 0, 100)
@@ -100,7 +103,7 @@ function draw() {
         // text("D", 210, 200)
         // text("A", 220, 200)
         // text("M", 230, 200)
-        sketch.renderText()
+        dialogBox.renderText()
     } else {
         // otherwise, we go into 3D and load our transparent, generated dialog
         // box img on top of a simple 3D scene.
@@ -109,15 +112,15 @@ function draw() {
         drawBlenderAxes()
         displayHUD()
 
-        sketch.renderTextFrame(cam)
-        sketch.renderText(cam)
+        dialogBox.renderTextFrame(cam)
+        dialogBox.renderText(cam)
 
         if (frameCount % 1 === 0) {
-            sketch.advanceChar()
+            dialogBox.advanceChar()
         }
 
         if (millis() - lastPassageAdvanceTime > 4000) {
-            sketch.nextPassage()
+            dialogBox.nextPassage()
             lastPassageAdvanceTime = millis()
         }
     }
