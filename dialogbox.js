@@ -8,10 +8,10 @@ class DialogBox {
         this.passageIndex = 0 // which passage in our passage array are we on?
         this.passage = this.passageList[this.passageIndex]
 
-        this.LEFT_MARGIN = 40
+        this.LEFT_MARGIN = 80
         this.RIGHT_MARGIN = this.LEFT_MARGIN
-        this.BOTTOM_MARGIN = 10
-        this.HEIGHT = 112
+        this.BOTTOM_MARGIN = 20
+        this.HEIGHT = 224
 
         this.boxWidth = width - this.LEFT_MARGIN - this.RIGHT_MARGIN
         this.textFrame = loadImage('data/textFrame.png')
@@ -185,15 +185,15 @@ class DialogBox {
         // these are the coordinates for the top left corner of our target box
         const x = this.LEFT_MARGIN
         const y = height-this.HEIGHT-this.BOTTOM_MARGIN
-        const r = 3 // side length of the corner triangle
-        const s = 3.5 // scaling factor of r to extend brackets in corners
+        const r = 7 // side length of the corner triangle
+        const s = 4 // scaling factor of r to extend brackets in corners
 
         const TLC = new p5.Vector(x, y) // top left corner
         const TRC = new p5.Vector(x+this.boxWidth, y) // top right corner
         const BRC = new p5.Vector(x+this.boxWidth, y+this.HEIGHT) // bottom r.
         // corner
         const BLC = new p5.Vector(x, y+this.HEIGHT)
-        const lineWeight = 3
+        const lineWeight = 5
 
         pg.fill(210, 62, 12, 75)
         pg.noStroke()
@@ -247,7 +247,7 @@ class DialogBox {
 
         /** Corner guards! */
         // extra thick corner guard, top left
-        pg.strokeWeight(lineWeight) /* lineWeight used to be 1 less, so we
+        pg.strokeWeight(lineWeight+1) /* lineWeight used to be 1 less, so we
          added one here */
         pg.beginShape()
         /* vertical line from bottom to BL corner; need vertex below */

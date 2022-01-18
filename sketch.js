@@ -58,7 +58,7 @@ function setup() {
     noSmooth()
 
     if (mode_2D) {
-        createCanvas(640, 360)
+        createCanvas(1280, 720)
     } else {
         createCanvas(640, 360, WEBGL)
         cam = new Dw.EasyCam(this._renderer, {distance: 240});
