@@ -85,7 +85,7 @@ function setup() {
     // TODO add arguments to DialogBox: tpp, hll
     dialogBox = new DialogBox(textList, highlightList, msPerPassage)
 
-    dialogBox.saveRenderedTextBoxImg()
+    // dialogBox.saveRenderedTextBoxImg()
 }
 
 function draw() {

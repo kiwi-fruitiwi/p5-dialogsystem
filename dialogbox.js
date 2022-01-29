@@ -33,6 +33,9 @@ class DialogBox {
                 port to java
                 polish lengths for text box frame to make sure they are accurate
          */
+
+        this.phase = 0 /* controls fading for triangle via alpha channel */
+        this.radius = 6 /* "radius" of the next-passage triangle */
     }
 
 
@@ -66,6 +69,31 @@ class DialogBox {
         /*  use text() to display characters with character wrap
             color(204, 4, 80) is the correct white text color
          */
+
+        /*  render fading dialogbox triangle if:
+         *      we are at the end of the passage, i.e.
+         *          this.index === this.passage.length-1?
+         *  TODO check if this works
+         *
+         *
+         */
+        push()
+        const PADDING = 40 /* space between center of triangle and box side */
+        translate(width-this.RIGHT_MARGIN-PADDING*1.2,
+            height-this.BOTTOM_MARGIN-PADDING)
+
+        /**
+         *  an equilateral triangle with center (0,0) and long leg 2*r has
+         *  vertices at; prove using law of sines, verify using py. theorem.
+         *  (0, r)
+         *  (-2r/sqrt(3), -r)
+         *  (2r/sqrt(3), -r)
+         */
+        const r = this.radius
+        const cyan = color(188, 20, 94)
+        fill(cyan)
+        triangle(0, r, -2*r/sqrt(3), -r, 2*r/sqrt(3), -r)
+        pop()
 
         noStroke()
         let CHAR_POS = []
