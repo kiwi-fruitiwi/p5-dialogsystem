@@ -90,10 +90,15 @@ class DialogBox {
          *  (2r/sqrt(3), -r)
          */
         const r = this.radius
-        const cyan = color(188, 20, 94)
+
+        /* alpha value to enable fading in our triangle */
+        const a = map(sin(frameCount/20), -1, 1, 0, 80)
+
+        const cyan = color(188, 20, 94, a)
         fill(cyan)
         triangle(0, r, -2*r/sqrt(3), -r, 2*r/sqrt(3), -r)
         pop()
+
 
         noStroke()
         let CHAR_POS = []
