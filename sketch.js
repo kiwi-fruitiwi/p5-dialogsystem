@@ -32,10 +32,12 @@ let voice
 let p5amp
 
 let dialogBox
-let mode_2D = true
+let mode_2D = true /* test in 2D? */
 
 let passages // our json file input
 let lastPassageAdvanceTime = 0 // when was the last passage advance?
+
+let finishedTextFrame; /* load a rendered textFrame */
 
 function preload() {
     // font = loadFont('data/giga.ttf') // doesn't work due to textWidth issues
@@ -44,8 +46,8 @@ function preload() {
     // font = loadFont('data/notjustgroovy.ttf')
     font = loadFont('data/meiryo.ttf')
     voice = loadSound('data/adam.mp3')
-    passages = loadJSON("passages.json")
-
+    passages = loadJSON('passages.json')
+    finishedTextFrame = loadImage('data/textFrame.png')
 }
 
 /* populate an array of passage text */
@@ -55,7 +57,7 @@ let highlightList = [] // a list of tuples specifying highlights and indexes
 let msPerPassage = 0 // how long to wait before advancing a passage
 
 function setup() {
-    noSmooth()
+    // noSmooth()
 
     if (mode_2D) {
         createCanvas(1280, 720)
@@ -96,13 +98,23 @@ function draw() {
     if (mode_2D) {
         dialogBox.render2DTextBox(this)
 
+        /**
+         *  create a cropped version of the 1280x720 textFrame. this is the
+         *  frame itself without the rest of the transparent background. Use
+         *  image.get(x, y, w, h)
+         */
+        const STROKE_WIDTH_ADJUST = 20;
+        let frameCrop = finishedTextFrame.get(
+            dialogBox.LEFT_MARGIN,
+            height - dialogBox.BOTTOM_MARGIN - dialogBox.HEIGHT,
+            dialogBox.boxWidth+STROKE_WIDTH_ADJUST,
+            dialogBox.HEIGHT
+            )
+
+        image(frameCrop, mouseX, mouseY)
+
         noStroke()
         fill(0, 0, 100)
-        // text(" ", 190, 200)
-        // text("A", 200, 200)
-        // text("D", 210, 200)
-        // text("A", 220, 200)
-        // text("M", 230, 200)
         dialogBox.renderText()
     } else {
         // otherwise, we go into 3D and load our transparent, generated dialog
