@@ -103,12 +103,12 @@ function draw() {
          *  frame itself without the rest of the transparent background. Use
          *  image.get(x, y, w, h)
          */
-        const STROKE_WIDTH_ADJUST = 20;
+        const STROKE_WIDTH_ADJUST = 10;
         let frameCrop = finishedTextFrame.get(
-            dialogBox.LEFT_MARGIN,
-            height - dialogBox.BOTTOM_MARGIN - dialogBox.HEIGHT,
-            dialogBox.boxWidth+STROKE_WIDTH_ADJUST,
-            dialogBox.HEIGHT
+            dialogBox.LEFT_MARGIN-STROKE_WIDTH_ADJUST,
+            height-dialogBox.BOTTOM_MARGIN-dialogBox.HEIGHT-STROKE_WIDTH_ADJUST,
+            dialogBox.boxWidth+STROKE_WIDTH_ADJUST*2,
+            dialogBox.HEIGHT+STROKE_WIDTH_ADJUST*2
             )
 
         image(frameCrop, mouseX, mouseY)
