@@ -58,6 +58,7 @@ let msPerPassage = 0 // how long to wait before advancing a passage
 
 function setup() {
     // noSmooth()
+    noCursor()
 
     if (mode_2D) {
         createCanvas(1280, 720)
@@ -103,19 +104,23 @@ function draw() {
          *  frame itself without the rest of the transparent background. Use
          *  image.get(x, y, w, h)
          */
-        const STROKE_WIDTH_ADJUST = 10;
-        let frameCrop = finishedTextFrame.get(
-            dialogBox.LEFT_MARGIN-STROKE_WIDTH_ADJUST,
-            height-dialogBox.BOTTOM_MARGIN-dialogBox.HEIGHT-STROKE_WIDTH_ADJUST,
-            dialogBox.boxWidth+STROKE_WIDTH_ADJUST*2,
-            dialogBox.HEIGHT+STROKE_WIDTH_ADJUST*2
-            )
+        const STROKE_WIDTH_ADJUST = 4;
+        const x = dialogBox.LEFT_MARGIN-STROKE_WIDTH_ADJUST
+        const y = height-dialogBox.BOTTOM_MARGIN-dialogBox.HEIGHT-STROKE_WIDTH_ADJUST
+        const w = dialogBox.boxWidth+STROKE_WIDTH_ADJUST*2
+        const h = dialogBox.HEIGHT+STROKE_WIDTH_ADJUST*2
+        let frameCrop = finishedTextFrame.get(x, y, w, h)
 
         image(frameCrop, mouseX, mouseY)
 
+        // noStroke()
+        // fill(0, 0, 100)
+        // dialogBox.renderText()
+
+        fill(90, 100, 100, 50)
         noStroke()
-        fill(0, 0, 100)
-        dialogBox.renderText()
+        circle(x, y, 4)
+        circle(x+w, y+h, 4)
     } else {
         // otherwise, we go into 3D and load our transparent, generated dialog
         // box img on top of a simple 3D scene.
